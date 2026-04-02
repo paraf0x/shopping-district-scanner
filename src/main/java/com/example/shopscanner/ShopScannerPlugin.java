@@ -1,5 +1,6 @@
 package com.example.shopscanner;
 
+import com.example.shopscanner.commands.ShopScannerCommand;
 import com.example.shopscanner.listeners.ContainerBreakListener;
 import com.example.shopscanner.listeners.ScannerInteractListener;
 import com.example.shopscanner.managers.ShopManager;
@@ -22,6 +23,9 @@ public class ShopScannerPlugin extends JavaPlugin {
                 new ScannerInteractListener(this, shopManager), this);
         getServer().getPluginManager().registerEvents(
                 new ContainerBreakListener(this, shopManager), this);
+
+        // Register commands
+        new ShopScannerCommand(this, shopManager).register();
 
         getLogger().info("ShopScanner enabled!");
     }

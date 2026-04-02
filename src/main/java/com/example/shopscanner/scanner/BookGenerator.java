@@ -1,6 +1,7 @@
 package com.example.shopscanner.scanner;
 
 import com.example.shopscanner.utils.ItemNameUtil;
+import net.kyori.adventure.text.Component;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BookMeta;
@@ -54,8 +55,9 @@ public final class BookGenerator {
         meta.setTitle(shopName);
         meta.setAuthor("ShopScanner");
 
+        // Use Adventure Components for pages
         for (String page : pages) {
-            meta.addPage(page);
+            meta.addPages(Component.text(page));
         }
 
         book.setItemMeta(meta);

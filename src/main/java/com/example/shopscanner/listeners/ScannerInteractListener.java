@@ -159,6 +159,14 @@ public class ScannerInteractListener implements Listener {
             return;
         }
 
+        // Check if lectern has a book to overwrite
+        Lectern lectern = (Lectern) block.getState();
+        ItemStack existingBook = lectern.getInventory().getItem(0);
+        if (existingBook == null || existingBook.getType() == org.bukkit.Material.AIR) {
+            sendError(player, "Place a book in the lectern first.");
+            return;
+        }
+
         // Check if shop has containers
         if (!shopManager.hasShop(shopName)) {
             sendError(player, "Shop '" + shopName + "' has no registered containers.");
@@ -186,10 +194,10 @@ public class ScannerInteractListener implements Listener {
         // Generate book
         ItemStack book = BookGenerator.generateBook(shopName, results);
 
-        // Place book in lectern
-        Lectern lectern = (Lectern) block.getState();
-        lectern.getInventory().setItem(0, book);
-        lectern.update();
+        // Get fresh lectern state and replace book
+        Lectern freshLectern = (Lectern) block.getState();
+        freshLectern.getSnapshotInventory().setItem(0, book);
+        freshLectern.update(true, false);
 
         sendSuccess(player, "Scanned " + results.size() + " containers for shop '" + shopName + "'.");
         playSound(player, "scan-complete");
