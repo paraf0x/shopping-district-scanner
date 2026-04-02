@@ -1,0 +1,18 @@
+name: ShopScanner
+version: "${version}"
+main: com.example.shopscanner.ShopScannerPlugin
+description: "Shop inventory scanner - scan containers and generate book reports"
+api-version: "1.21"
+authors:
+  - paraf0x
+
+permissions:
+  shopscanner.use:
+    description: "Scanner benutzen (alle Aktionen)"
+    default: op
+  shopscanner.give:
+    description: "give-Command"
+    default: op
+  shopscanner.admin:
+    description: "reload + list Commands"
+    default: op

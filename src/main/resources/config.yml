@@ -1,0 +1,32 @@
+# ShopScanner Konfiguration
+
+# Chat-Präfix
+prefix: "§6[Scanner]§r "
+
+# Max Container pro Shop
+max-containers-per-shop: 54
+
+# Shopping-District-Zone
+# Alle Scanner-Aktionen funktionieren NUR innerhalb dieser Zone.
+# Zone = quadratischer Bereich aus Chunks in der Overworld.
+shopping-district:
+  # Name der Overworld (normalerweise "world")
+  world: "world"
+  # Center-Chunk Koordinaten
+  center-chunk-x: 0
+  center-chunk-z: 0
+  # Radius in Chunks um den Center-Chunk
+  # 5 = Zone von Chunk -5,-5 bis 5,5 (11x11 Chunks = 176x176 Blöcke)
+  radius-chunks: 5
+
+# Lectern-Scan-Radius
+# Beim Scan werden nur Container im 3x3 Chunk-Bereich (±1) um das Lectern gescannt.
+# Container außerhalb werden im Buch als "außerhalb Scan-Radius" markiert.
+# Dieser Wert ist fest auf 1 (3x3) und nicht konfigurierbar.
+
+# Sound-Effekte (Bukkit Sound enum names)
+sounds:
+  register: "BLOCK_CHEST_LOCKED"
+  deregister: "BLOCK_CHEST_CLOSE"
+  scan-complete: "ENTITY_EXPERIENCE_ORB_PICKUP"
+  error: "ENTITY_VILLAGER_NO"
