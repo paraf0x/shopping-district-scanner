@@ -4,11 +4,13 @@ import com.example.shopscanner.commands.ShopScannerCommand;
 import com.example.shopscanner.listeners.ContainerBreakListener;
 import com.example.shopscanner.listeners.ScannerInteractListener;
 import com.example.shopscanner.managers.ShopManager;
+import com.example.shopscanner.visual.ContainerHighlighter;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class ShopScannerPlugin extends JavaPlugin {
 
     private ShopManager shopManager;
+    private ContainerHighlighter highlighter;
 
     @Override
     public void onEnable() {
@@ -24,6 +26,10 @@ public class ShopScannerPlugin extends JavaPlugin {
         getServer().getPluginManager().registerEvents(
                 new ContainerBreakListener(this, shopManager), this);
 
+        // Register highlighter
+        highlighter = new ContainerHighlighter(this, shopManager);
+        getServer().getPluginManager().registerEvents(highlighter, this);
+
         // Register commands
         new ShopScannerCommand(this, shopManager).register();
 
@@ -32,6 +38,9 @@ public class ShopScannerPlugin extends JavaPlugin {
 
     @Override
     public void onDisable() {
+        if (highlighter != null) {
+            highlighter.stopAll();
+        }
         if (shopManager != null) {
             shopManager.save();
         }

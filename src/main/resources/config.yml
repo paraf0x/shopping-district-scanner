@@ -30,3 +30,14 @@ sounds:
   deregister: "BLOCK_CHEST_CLOSE"
   scan-complete: "ENTITY_EXPERIENCE_ORB_PICKUP"
   error: "ENTITY_VILLAGER_NO"
+
+# Container-Highlighting
+# Shows particles around registered containers when holding a scanner
+highlighting:
+  enabled: true
+  # Particle color for containers (hex)
+  container-color: "#00FF00"
+  # Number of particles in the ring
+  particle-count: 8
+  # Update interval in ticks (20 ticks = 1 second)
+  update-interval: 10
