@@ -9,7 +9,7 @@ authors:
 permissions:
   shopscanner.use:
     description: "Use the scanner (all actions)"
-    default: op
+    default: "true"
   shopscanner.give:
     description: "Use /shopscanner give command"
     default: op

@@ -45,7 +45,7 @@ Perfect for shopping districts where shop owners want to track their inventory a
 
 | Permission | Default | Description |
 |------------|---------|-------------|
-| `shopscanner.use` | op | Use the scanner (all actions) |
+| `shopscanner.use` | true | Use the scanner (all actions) |
 | `shopscanner.give` | op | Use /shopscanner give command |
 | `shopscanner.admin` | op | Use /shopscanner reload and list commands |
 
