@@ -20,30 +20,28 @@ public final class BookGenerator {
 
     private static final int MAX_PAGES = 100;
     private static final int MAX_LINES_PER_PAGE = 14;
-    private static final int HEADER_LINES = 3; // Container type + coords + separator
-    private static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
+    private static final int HEADER_LINES = 3;
+    private static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
     private BookGenerator() {
     }
 
     /**
      * Generates a Written Book from scan results.
-     *
-     * @param shopName the shop name
-     * @param results  the scan results
-     * @return the Written Book ItemStack
      */
     public static ItemStack generateBook(String shopName, List<ContainerScanner.ContainerResult> results) {
         List<String> pages = new ArrayList<>();
 
+        // Count total diamonds across all containers
+        int totalDiamonds = countTotalDiamonds(results);
+
         // Title page
-        pages.add(buildTitlePage(shopName, results.size()));
+        pages.add(buildTitlePage(shopName, results.size(), totalDiamonds));
 
         // Container pages
         for (ContainerScanner.ContainerResult result : results) {
             if (pages.size() >= MAX_PAGES) {
-                // Replace last page with overflow message
-                pages.set(pages.size() - 1, "... weitere Container\nnicht darstellbar");
+                pages.set(pages.size() - 1, "...\n\nMore containers\ncould not be shown.");
                 break;
             }
             addContainerPages(pages, result);
@@ -55,7 +53,6 @@ public final class BookGenerator {
         meta.setTitle(shopName);
         meta.setAuthor("ShopScanner");
 
-        // Use Adventure Components for pages
         for (String page : pages) {
             meta.addPages(Component.text(page));
         }
@@ -64,17 +61,33 @@ public final class BookGenerator {
         return book;
     }
 
-    private static String buildTitlePage(String shopName, int containerCount) {
+    private static String buildTitlePage(String shopName, int containerCount, int totalDiamonds) {
         String date = LocalDateTime.now().format(DATE_FORMAT);
-        return """
-                ══════════════
-                  Shop Scan
-                  "%s"
-                ══════════════
-                %s
+        String containerWord = containerCount == 1 ? "Container" : "Containers";
 
-                %d Container
-                ══════════════""".formatted(shopName, date, containerCount);
+        // Keep title page clean and readable
+        return """
+               ---------------
+                 Shop Scan
+
+                 "%s"
+
+               ---------------
+               %s
+
+               %d %s
+               Diamonds: %d
+               ---------------""".formatted(shopName, date, containerCount, containerWord, totalDiamonds);
+    }
+
+    private static int countTotalDiamonds(List<ContainerScanner.ContainerResult> results) {
+        int total = 0;
+        for (ContainerScanner.ContainerResult result : results) {
+            if (result.items() != null) {
+                total += result.items().getOrDefault(Material.DIAMOND, 0);
+            }
+        }
+        return total;
     }
 
     private static void addContainerPages(List<String> pages, ContainerScanner.ContainerResult result) {
@@ -91,20 +104,20 @@ public final class BookGenerator {
         // Handle special statuses
         switch (result.status()) {
             case EMPTY -> {
-                pages.add(header + "(leer)");
+                pages.add(header + "(empty)");
                 return;
             }
             case CHUNK_NOT_LOADED -> {
-                pages.add(header + "(Chunk nicht geladen)");
+                pages.add(header + "(chunk not loaded)");
                 return;
             }
             case OUT_OF_SCAN_RADIUS -> {
-                pages.add(header + "(außerhalb Scan-Radius)");
+                pages.add(header + "(out of scan range)");
                 return;
             }
             case NOT_A_CONTAINER -> {
-                String noContainerHeader = "@ %d, %d, %d\n──────────────\n".formatted(x, y, z);
-                pages.add(noContainerHeader + "(kein Container mehr\n - wurde entfernt)");
+                String noContainerHeader = "@ %d, %d, %d\n---------------\n".formatted(x, y, z);
+                pages.add(noContainerHeader + "(no longer exists\n- removed)");
                 return;
             }
             case OK -> {
@@ -127,18 +140,17 @@ public final class BookGenerator {
                 break;
             }
 
-            String itemLine = ItemNameUtil.formatMaterialName(entry.getKey()) + " x " + entry.getValue() + "\n";
+            String itemLine = formatItemLine(entry.getKey(), entry.getValue());
 
             if (linesOnPage >= MAX_LINES_PER_PAGE) {
-                // Save current page and start new one
                 pages.add(currentPage.toString());
                 if (pages.size() >= MAX_PAGES) {
                     break;
                 }
 
-                // Continuation page
-                String contHeader = result.containerTypeName() + " (Forts.)\n@ %d, %d, %d\n──────────────\n"
-                        .formatted(x, y, z);
+                // Continuation page header
+                String contHeader = "%s (cont.)\n@ %d, %d, %d\n---------------\n"
+                        .formatted(result.containerTypeName(), x, y, z);
                 currentPage = new StringBuilder(contHeader);
                 linesOnPage = HEADER_LINES;
                 isFirstPage = false;
@@ -148,7 +160,6 @@ public final class BookGenerator {
             linesOnPage++;
         }
 
-        // Add final page if it has content
         if (currentPage.length() > 0 && (isFirstPage || linesOnPage > HEADER_LINES)) {
             pages.add(currentPage.toString());
         }
@@ -156,6 +167,15 @@ public final class BookGenerator {
 
     private static String buildContainerHeader(String typeName, int x, int y, int z) {
         String type = typeName != null ? typeName : "Container";
-        return "%s\n@ %d, %d, %d\n──────────────\n".formatted(type, x, y, z);
+        return "%s\n@ %d, %d, %d\n---------------\n".formatted(type, x, y, z);
+    }
+
+    private static String formatItemLine(Material material, int amount) {
+        String name = ItemNameUtil.formatMaterialName(material);
+        // Shorten long names to fit book width (~19 chars total with amount)
+        if (name.length() > 14) {
+            name = name.substring(0, 12) + "..";
+        }
+        return name + " x" + amount + "\n";
     }
 }

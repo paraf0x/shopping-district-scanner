@@ -280,7 +280,8 @@ public class ScannerInteractListener implements Listener {
             return;
         }
         try {
-            // Convert config name to namespaced key (e.g., BLOCK_CHEST_LOCKED -> block.chest.locked)
+            // Use sound ID directly (e.g., block.chest.locked)
+            // Also supports legacy format BLOCK_CHEST_LOCKED -> block.chest.locked
             String soundId = soundName.toLowerCase().replace("_", ".");
             player.playSound(player.getLocation(), soundId, 1.0f, 1.0f);
         } catch (Exception e) {

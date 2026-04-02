@@ -1,37 +1,37 @@
-# ShopScanner Konfiguration
+# ShopScanner Configuration
 
-# Chat-Präfix
+# Chat prefix for all messages
 prefix: "§6[Scanner]§r "
 
-# Max Container pro Shop
+# Maximum containers per shop
 max-containers-per-shop: 54
 
-# Shopping-District-Zone
-# Alle Scanner-Aktionen funktionieren NUR innerhalb dieser Zone.
-# Zone = quadratischer Bereich aus Chunks in der Overworld.
+# Shopping District Zone
+# All scanner actions only work within this zone.
+# Zone = square area of chunks in the overworld.
 shopping-district:
-  # Name der Overworld (normalerweise "world")
+  # Name of the overworld (usually "world")
   world: "world"
-  # Center-Chunk Koordinaten
+  # Center chunk coordinates
   center-chunk-x: 0
   center-chunk-z: 0
-  # Radius in Chunks um den Center-Chunk
-  # 5 = Zone von Chunk -5,-5 bis 5,5 (11x11 Chunks = 176x176 Blöcke)
+  # Radius in chunks around the center chunk
+  # 5 = zone from chunk -5,-5 to 5,5 (11x11 chunks = 176x176 blocks)
   radius-chunks: 5
 
-# Lectern-Scan-Radius
-# Beim Scan werden nur Container im 3x3 Chunk-Bereich (±1) um das Lectern gescannt.
-# Container außerhalb werden im Buch als "außerhalb Scan-Radius" markiert.
-# Dieser Wert ist fest auf 1 (3x3) und nicht konfigurierbar.
+# Lectern Scan Radius
+# Only containers within a 3x3 chunk area around the lectern are scanned.
+# Containers outside are marked as "out of scan range" in the book.
+# This value is fixed at 1 (3x3) and not configurable.
 
-# Sound-Effekte (Bukkit Sound enum names)
+# Sound effects (use lowercase sound IDs, e.g., block.chest.locked)
 sounds:
-  register: "BLOCK_CHEST_LOCKED"
-  deregister: "BLOCK_CHEST_CLOSE"
-  scan-complete: "ENTITY_EXPERIENCE_ORB_PICKUP"
-  error: "ENTITY_VILLAGER_NO"
+  register: "block.chest.locked"
+  deregister: "block.chest.close"
+  scan-complete: "entity.experience_orb.pickup"
+  error: "entity.villager.no"
 
-# Container-Highlighting
+# Container Highlighting
 # Shows particles around registered containers when holding a scanner
 highlighting:
   enabled: true

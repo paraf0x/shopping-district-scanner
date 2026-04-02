@@ -8,11 +8,11 @@ authors:
 
 permissions:
   shopscanner.use:
-    description: "Scanner benutzen (alle Aktionen)"
+    description: "Use the scanner (all actions)"
     default: op
   shopscanner.give:
-    description: "give-Command"
+    description: "Use /shopscanner give command"
     default: op
   shopscanner.admin:
-    description: "reload + list Commands"
+    description: "Use /shopscanner reload and list commands"
     default: op
