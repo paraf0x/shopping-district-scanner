@@ -167,6 +167,23 @@ public class ScannerInteractListener implements Listener {
             return;
         }
 
+        // Safety check: only allow replacing empty Book and Quill or same shop's scan result
+        if (existingBook.getType() == org.bukkit.Material.WRITABLE_BOOK) {
+            // Empty book and quill - OK to replace
+        } else if (existingBook.getType() == org.bukkit.Material.WRITTEN_BOOK) {
+            // Check if it's a scan result from this shop (title matches shop name)
+            org.bukkit.inventory.meta.BookMeta bookMeta = (org.bukkit.inventory.meta.BookMeta) existingBook.getItemMeta();
+            String bookTitle = bookMeta.getTitle();
+            if (bookTitle == null || !bookTitle.equals(shopName)) {
+                sendError(player, "Cannot overwrite: book is not from this shop.");
+                return;
+            }
+            // Same shop's book - OK to replace
+        } else {
+            sendError(player, "Place a Book and Quill in the lectern.");
+            return;
+        }
+
         // Check if shop has containers
         if (!shopManager.hasShop(shopName)) {
             sendError(player, "Shop '" + shopName + "' has no registered containers.");
