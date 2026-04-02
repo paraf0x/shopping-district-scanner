@@ -1,5 +1,6 @@
 package com.example.shopscanner;
 
+import com.example.shopscanner.listeners.ScannerInteractListener;
 import com.example.shopscanner.managers.ShopManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -14,6 +15,10 @@ public class ShopScannerPlugin extends JavaPlugin {
         // Initialize managers
         shopManager = new ShopManager(this);
         shopManager.load();
+
+        // Register listeners
+        getServer().getPluginManager().registerEvents(
+                new ScannerInteractListener(this, shopManager), this);
 
         getLogger().info("ShopScanner enabled!");
     }
